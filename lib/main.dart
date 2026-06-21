@@ -487,12 +487,309 @@ class _SearchScreenState extends State<SearchScreen> {
 // ==========================================
 // 3. PANTALLA DE SUBIR CONTENIDO
 // ==========================================
-class UploadScreen extends StatelessWidget {
+// ==========================================
+// 3. PANTALLA DE SUBIR CONTENIDO (INTERACTIVA)
+// ==========================================
+class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
 
   @override
+  State<UploadScreen> createState() => _UploadScreenState();
+}
+
+class _UploadScreenState extends State<UploadScreen> {
+  final _titleController = TextEditingController();
+
+  // Variables de Estado para controlar las selecciones de personalización de GLOWY
+  String _selectedLength = 'Medium'; // Corto, Mediano, Largo
+  String _selectedShape = 'Almond'; // Forma de la uña
+  bool _isSharedInCommunity = true;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    super.dispose();
+  }
+
+  // Simulación visual de subir la foto con éxito
+  void _simulateUpload() {
+    if (_titleController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, escribe un título para tu diseño ✨'),
+          backgroundColor: Colors.amber,
+        ),
+      );
+      return;
+    }
+
+    // Banner de éxito estilo GLOWY
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('¡Tu diseño se ha subido con éxito a la comunidad! 💅🚀'),
+        backgroundColor: Color(0xFFFF416C),
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    // Limpiamos los campos tras la simulación
+    setState(() {
+      _titleController.clear();
+      _selectedLength = 'Medium';
+      _selectedShape = 'Almond';
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Subir Diseño'));
+    return Scaffold(
+      backgroundColor: Colors.transparent, // Preserva el fondo neón del padre
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Comparte tu Nail Art 📷',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(height: 5),
+            const Text(
+              'Inspira a la comunidad subiendo tus creaciones exclusivas.',
+              style: TextStyle(color: Colors.grey, fontSize: 13),
+            ),
+            const SizedBox(height: 25),
+
+            // Cuadro de Carga de Imagen Estilo Glam
+            GestureDetector(
+              onTap: () {
+                // Aquí se abrirá la galería del teléfono en el futuro
+              },
+              child: Container(
+                width: double.infinity,
+                height: 180,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF16122C),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: const Color(0xFF25113A),
+                    width: 1.5,
+                  ),
+                ),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add_photo_alternate_outlined,
+                      color: Color(0xFFFF416C),
+                      size: 45,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Seleccionar foto de manicura',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      'Soporta JPG, PNG',
+                      style: TextStyle(color: Colors.grey, fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 25),
+
+            // Input: Título de la manicura
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Título del Diseño',
+                labelStyle: const TextStyle(color: Colors.grey),
+                hintText: 'Ej: Coquette Pastel con Perlas 🎀',
+                filled: true,
+                fillColor: const Color(0xFF16122C),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Color(0xFF25113A)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 25),
+
+            // Selector Técnico 1: Longitud de la uña (Resuelve Filtros de tu encuesta)
+            const Text(
+              'LONGITUD DE LA UÑA',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF8E8A9F),
+                letterSpacing: 1.0,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: ['Short', 'Medium', 'Long'].map((length) {
+                final isSelected = _selectedLength == length;
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => _selectedLength = length),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: isSelected
+                            ? const LinearGradient(
+                                colors: [Color(0xFFFF416C), Color(0xFF8A2387)],
+                              )
+                            : null,
+                        color: isSelected ? null : const Color(0xFF16122C),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected
+                              ? Colors.transparent
+                              : const Color(0xFF25113A),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          length,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isSelected ? Colors.white : Colors.grey,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 25),
+
+            // Selector Técnico 2: Forma de la uña
+            const Text(
+              'FORMA DE LA UÑA',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF8E8A9F),
+                letterSpacing: 1.0,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: ['Almond', 'Square', 'Stiletto'].map((shape) {
+                final isSelected = _selectedShape == shape;
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => _selectedShape = shape),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: isSelected
+                            ? const LinearGradient(
+                                colors: [Color(0xFFFF416C), Color(0xFF8A2387)],
+                              )
+                            : null,
+                        color: isSelected ? null : const Color(0xFF16122C),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isSelected
+                              ? Colors.transparent
+                              : const Color(0xFF25113A),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          shape,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isSelected ? Colors.white : Colors.grey,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 25),
+
+            // Interruptor (Switch): Compartir en público o guardar privado
+            SwitchListTile(
+              title: const Text(
+                'Compartir en el Feed público',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+              subtitle: const Text(
+                'Permite que otras usuarias descubran tu originalidad',
+                style: TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+              value: _isSharedInCommunity,
+              activeColor: const Color(0xFFFF416C),
+              contentPadding: EdgeInsets.zero,
+              onChanged: (bool value) {
+                setState(() {
+                  _isSharedInCommunity = value;
+                });
+              },
+            ),
+            const SizedBox(height: 35),
+
+            // Botón de Envío con Gradiente Glam Premium
+            Container(
+              width: double.infinity,
+              height: 55,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFF416C), Color(0xFF8A2387)],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFF416C).withOpacity(0.25),
+                    blurRadius: 12,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: _simulateUpload,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(
+                  'PUBLICAR DISEÑO ✨',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
   }
 }
 
