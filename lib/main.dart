@@ -61,25 +61,83 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         child: SafeArea(
           child: Column(
             children: [
+              // ==========================================
+              // ENCABEZADO LOGO Y ESLOGAN PREMIUM DE GLOWY
+              // ==========================================
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 10.0,
+                padding: const EdgeInsets.only(
+                  left: 20.0,
+                  right: 20.0,
+                  top: 15.0,
+                  bottom: 5.0,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'GLOWY',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 4.0,
-                        fontSize: 28,
-                        color: Colors.white,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color(0xFFFF416C),
+                                  width: 1.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xFFFF416C,
+                                    ).withOpacity(0.3),
+                                    blurRadius: 8,
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.auto_awesome,
+                                color: Color(0xFFFF416C),
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            ShaderMask(
+                              shaderCallback: (bounds) => const LinearGradient(
+                                colors: [Color(0xFFFF416C), Color(0xFF8A2387)],
+                              ).createShader(bounds),
+                              child: const Text(
+                                'GLOWY',
+                                style: TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 2.5,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'DISCOVER  •  SAVE  •  GET INSPIRED',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFE5A4E7),
+                            letterSpacing: 2.0,
+                          ),
+                        ),
+                      ],
                     ),
                     IconButton(
-                      icon: const Icon(Icons.logout, color: Color(0xFFE5A4E7)),
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Color(0xFFE5A4E7),
+                        size: 22,
+                      ),
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.setBool('isLoggedIn', false);
@@ -96,6 +154,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
               Expanded(child: _screens[_selectedIndex]),
             ],
           ),
@@ -485,9 +544,6 @@ class _SearchScreenState extends State<SearchScreen> {
 }
 
 // ==========================================
-// 3. PANTALLA DE SUBIR CONTENIDO
-// ==========================================
-// ==========================================
 // 3. PANTALLA DE SUBIR CONTENIDO (INTERACTIVA)
 // ==========================================
 class UploadScreen extends StatefulWidget {
@@ -499,10 +555,8 @@ class UploadScreen extends StatefulWidget {
 
 class _UploadScreenState extends State<UploadScreen> {
   final _titleController = TextEditingController();
-
-  // Variables de Estado para controlar las selecciones de personalización de GLOWY
-  String _selectedLength = 'Medium'; // Corto, Mediano, Largo
-  String _selectedShape = 'Almond'; // Forma de la uña
+  String _selectedLength = 'Medium';
+  String _selectedShape = 'Almond';
   bool _isSharedInCommunity = true;
 
   @override
@@ -511,7 +565,6 @@ class _UploadScreenState extends State<UploadScreen> {
     super.dispose();
   }
 
-  // Simulación visual de subir la foto con éxito
   void _simulateUpload() {
     if (_titleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -522,17 +575,12 @@ class _UploadScreenState extends State<UploadScreen> {
       );
       return;
     }
-
-    // Banner de éxito estilo GLOWY
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('¡Tu diseño se ha subido con éxito a la comunidad! 💅🚀'),
+        content: Text('¡Tu diseño se ha subido con éxito! 💅🚀'),
         backgroundColor: Color(0xFFFF416C),
-        duration: Duration(seconds: 2),
       ),
     );
-
-    // Limpiamos los campos tras la simulación
     setState(() {
       _titleController.clear();
       _selectedLength = 'Medium';
@@ -543,7 +591,7 @@ class _UploadScreenState extends State<UploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent, // Preserva el fondo neón del padre
+      backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -551,70 +599,47 @@ class _UploadScreenState extends State<UploadScreen> {
           children: [
             const Text(
               'Comparte tu Nail Art 📷',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 5),
             const Text(
-              'Inspira a la comunidad subiendo tus creaciones exclusivas.',
+              'Inspira a la comunidad subiendo tus creaciones.',
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
             const SizedBox(height: 25),
-
-            // Cuadro de Carga de Imagen Estilo Glam
-            GestureDetector(
-              onTap: () {
-                // Aquí se abrirá la galería del teléfono en el futuro
-              },
-              child: Container(
-                width: double.infinity,
-                height: 180,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF16122C),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: const Color(0xFF25113A),
-                    width: 1.5,
+            Container(
+              width: double.infinity,
+              height: 150,
+              decoration: BoxDecoration(
+                color: const Color(0xFF16122C),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFF25113A)),
+              ),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.add_photo_alternate_outlined,
+                    color: Color(0xFFFF416C),
+                    size: 40,
                   ),
-                ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add_photo_alternate_outlined,
-                      color: Color(0xFFFF416C),
-                      size: 45,
+                  SizedBox(height: 10),
+                  Text(
+                    'Seleccionar foto de manicura',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Seleccionar foto de manicura',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Soporta JPG, PNG',
-                      style: TextStyle(color: Colors.grey, fontSize: 11),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 25),
-
-            // Input: Título de la manicura
             TextField(
               controller: _titleController,
               decoration: InputDecoration(
                 labelText: 'Título del Diseño',
                 labelStyle: const TextStyle(color: Colors.grey),
-                hintText: 'Ej: Coquette Pastel con Perlas 🎀',
                 filled: true,
                 fillColor: const Color(0xFF16122C),
                 border: OutlineInputBorder(
@@ -624,15 +649,12 @@ class _UploadScreenState extends State<UploadScreen> {
               ),
             ),
             const SizedBox(height: 25),
-
-            // Selector Técnico 1: Longitud de la uña (Resuelve Filtros de tu encuesta)
             const Text(
               'LONGITUD DE LA UÑA',
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8E8A9F),
-                letterSpacing: 1.0,
               ),
             ),
             const SizedBox(height: 10),
@@ -653,11 +675,7 @@ class _UploadScreenState extends State<UploadScreen> {
                             : null,
                         color: isSelected ? null : const Color(0xFF16122C),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isSelected
-                              ? Colors.transparent
-                              : const Color(0xFF25113A),
-                        ),
+                        border: Border.all(color: const Color(0xFF25113A)),
                       ),
                       child: Center(
                         child: Text(
@@ -665,7 +683,6 @@ class _UploadScreenState extends State<UploadScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: isSelected ? Colors.white : Colors.grey,
-                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -675,15 +692,12 @@ class _UploadScreenState extends State<UploadScreen> {
               }).toList(),
             ),
             const SizedBox(height: 25),
-
-            // Selector Técnico 2: Forma de la uña
             const Text(
               'FORMA DE LA UÑA',
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8E8A9F),
-                letterSpacing: 1.0,
               ),
             ),
             const SizedBox(height: 10),
@@ -704,11 +718,7 @@ class _UploadScreenState extends State<UploadScreen> {
                             : null,
                         color: isSelected ? null : const Color(0xFF16122C),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isSelected
-                              ? Colors.transparent
-                              : const Color(0xFF25113A),
-                        ),
+                        border: Border.all(color: const Color(0xFF25113A)),
                       ),
                       child: Center(
                         child: Text(
@@ -716,7 +726,6 @@ class _UploadScreenState extends State<UploadScreen> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: isSelected ? Colors.white : Colors.grey,
-                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -726,66 +735,42 @@ class _UploadScreenState extends State<UploadScreen> {
               }).toList(),
             ),
             const SizedBox(height: 25),
-
-            // Interruptor (Switch): Compartir en público o guardar privado
             SwitchListTile(
               title: const Text(
                 'Compartir en el Feed público',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-              ),
-              subtitle: const Text(
-                'Permite que otras usuarias descubran tu originalidad',
-                style: TextStyle(fontSize: 11, color: Colors.grey),
+                style: TextStyle(fontSize: 14),
               ),
               value: _isSharedInCommunity,
               activeColor: const Color(0xFFFF416C),
               contentPadding: EdgeInsets.zero,
-              onChanged: (bool value) {
-                setState(() {
-                  _isSharedInCommunity = value;
-                });
-              },
+              onChanged: (bool value) =>
+                  setState(() => _isSharedInCommunity = value),
             ),
-            const SizedBox(height: 35),
-
-            // Botón de Envío con Gradiente Glam Premium
+            const SizedBox(height: 25),
             Container(
               width: double.infinity,
-              height: 55,
+              height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 gradient: const LinearGradient(
                   colors: [Color(0xFFFF416C), Color(0xFF8A2387)],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFFF416C).withOpacity(0.25),
-                    blurRadius: 12,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
               ),
               child: ElevatedButton(
                 onPressed: _simulateUpload,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
                 ),
                 child: const Text(
                   'PUBLICAR DISEÑO ✨',
                   style: TextStyle(
-                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 1.0,
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -817,6 +802,7 @@ class _SavedScreenState extends State<SavedScreen> {
   Future<void> _loadFolders() async {
     final prefs = await SharedPreferences.getInstance();
     final List<String>? savedList = prefs.getStringList('glowy_folders');
+
     if (savedList == null || savedList.isEmpty) {
       _agendaFolders = [
         {
@@ -857,6 +843,7 @@ class _SavedScreenState extends State<SavedScreen> {
   void _createNewFolderDialog() {
     final titleController = TextEditingController();
     final subtitleController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) {
